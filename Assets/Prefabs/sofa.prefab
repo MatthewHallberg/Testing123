@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 33269809661467232}
   - component: {fileID: 23470537617200084}
   - component: {fileID: 65131143542227156}
+  - component: {fileID: 114728681297435012}
   m_Layer: 0
   m_Name: sofa
   m_TagString: Selectable
@@ -151,7 +152,7 @@ Transform:
   m_GameObject: {fileID: 1521183798223858}
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 4}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 4128741617355140}
   m_Father: {fileID: 0}
@@ -420,7 +421,7 @@ MonoBehaviour:
   RotateImage: {fileID: 1341727254615068}
   ParentObject: {fileID: 1521183798223858}
   buttonsActive: 0
-  StartScale: {x: 5, y: 5, z: 5}
+  StartScale: {x: 10, y: 10, z: 10}
 --- !u!114 &114584810063601930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -432,3 +433,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f187ec1d03af941808c896d54e7c1103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114728681297435012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521183798223858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d27c7168d6c44a5870afd3dcbabb15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldDetectRotate: 0

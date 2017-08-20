@@ -17,6 +17,10 @@ namespace UnityEngine.XR.iOS
 	
 		private Vector3 scaleUp = new Vector3 (.2f, .2f, 0);
 
+		private GameObject[] Hideable;
+
+		public GameObject particleMaker, planeMaker;
+
 		void Start(){
 
 			_instance = this;
@@ -46,6 +50,14 @@ namespace UnityEngine.XR.iOS
 			foreach (Transform child in FurnitureParent) {
 				child.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (false);
 			}
+				
+			Hideable = GameObject.FindGameObjectsWithTag("Hideable");
+
+			foreach (GameObject go in Hideable){
+				go.SetActive (false);
+			}
+			planeMaker.SetActive (false);
+			particleMaker.SetActive (false);
 		}
 
 		public void CameraButtonUp(){
@@ -55,6 +67,11 @@ namespace UnityEngine.XR.iOS
 			foreach (Transform child in Canvas.transform) {
 				child.gameObject.SetActive (true);
 			}
+			foreach (GameObject go in Hideable){
+				go.SetActive (true);
+			}
+			planeMaker.SetActive (true);
+			particleMaker.SetActive (true);
 		}
 
 		public void ChairButtonDown(){
@@ -70,15 +87,20 @@ namespace UnityEngine.XR.iOS
 			ResetButtons ();
 			ButtonPressed (Couch);
 			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Couch;
-
 		}
 
-		public void PictureButtonDown(){
+		public void ChairSmallButtonDown(){
 
 			ResetButtons ();
-			ButtonPressed (Picture);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Picture;
+			ButtonPressed (ChairSmall);
+			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.ChairSmall;
+		}
 
+		public void TableButtonDown(){
+
+			ResetButtons ();
+			ButtonPressed (Table);
+			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Table;
 		}
 
 		public void CarpetButtonDown(){
@@ -86,7 +108,6 @@ namespace UnityEngine.XR.iOS
 			ResetButtons ();
 			ButtonPressed (Carpet);
 			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Carpet;
-
 		}
 
 		void ButtonPressed(Transform desiredTransform){

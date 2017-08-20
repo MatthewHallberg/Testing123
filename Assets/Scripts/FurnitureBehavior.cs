@@ -13,18 +13,17 @@ public class FurnitureBehavior : MonoBehaviour {
 
 	private float yAngle = 1f;
 
-	void Start(){
-
-		transform.parent.localScale = StartScale;
-		ActivateButtons (false);
-	}
-
 	// Update is called once per frame
 	void Update () {
 
 		if (RotateImage.activeSelf) {
 			RotateImage.transform.eulerAngles += new Vector3 (0, yAngle, 0);
 		}
+	}
+
+	public void Init(){
+		transform.parent.localScale = StartScale;
+		ActivateButtons (false);
 	}
 
 	public void ActivateButtons(bool active){

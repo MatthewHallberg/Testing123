@@ -12,7 +12,7 @@ namespace UnityEngine.XR.iOS
 		public static bool shouldDetectTouch = false;
 
 		public Transform m_HitTransform;
-		public GameObject Chair, Couch, Picture, Carpet, ChairSmall, Table;
+		public GameObject Chair, Couch, Carpet, ChairSmall, Table;
 
 		private GameObject lastSelectedObject;
 
@@ -23,6 +23,7 @@ namespace UnityEngine.XR.iOS
 		private bool shouldPlaceObject = true;
 
 		private bool objectWasMoved = false;
+		private bool objectWasRotated = false;
 		private Vector3 mouseStartPosition;
 
 		bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes, Transform desiredTransform)
@@ -42,7 +43,8 @@ namespace UnityEngine.XR.iOS
 		void PlaceNewObject(GameObject newObject, ARPoint point, ARHitTestResultType[] resultTypes, bool shouldRotate){
 
 			newObject.transform.localPosition = Vector3.zero;
-			newObject.transform.localScale = Vector3.one;
+			newObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().Init ();
+
 			if (shouldRotate) {
 				newObject.transform.rotation = Quaternion.Euler (Vector3.zero);
 			}
@@ -64,7 +66,6 @@ namespace UnityEngine.XR.iOS
 				shouldDetectTouch = true;
 				objectWasMoved = false;
 				mouseStartPosition = Input.mousePosition;
-				lastSelectedObject = null;
 
 				//get current selected object
 				RaycastHit hit; 
@@ -82,17 +83,11 @@ namespace UnityEngine.XR.iOS
 			if (Input.touchCount > 1) {
 
 				shouldDetectTouch = false;
+				objectWasRotated = true;
 			}
 
-			if (!shouldDetectTouch && !objectWasMoved && Input.GetMouseButtonUp (0)) {
-
-				if (lastSelectedObject != null) {
-					lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (true);
-					lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().DeactivateRotateImage ();
-				}
-			}
 			//if dragging
-			if (Input.GetMouseButton (0) && Input.mousePosition != mouseStartPosition && lastSelectedObject != null) {
+			if (shouldDetectTouch && Input.GetMouseButton (0) && Input.mousePosition != mouseStartPosition && lastSelectedObject != null) {
 				objectWasMoved = true;
 
 				var screenPosition = Camera.main.ScreenToViewportPoint (Input.mousePosition);
@@ -144,6 +139,7 @@ namespace UnityEngine.XR.iOS
 							shouldPlaceObject = false;
 							hit.transform.parent.transform.parent.GetComponent<FurnitureBehavior> ().ActivateRotateImage ();
 							lastSelectedObject = hit.transform.parent.transform.parent.GetComponent<FurnitureBehavior> ().ParentObject;
+							lastSelectedObject.GetComponent<RotateBehavior> ().shouldDetectRotate = true;
 						}
 					}
 						if (shouldPlaceObject) {
@@ -173,8 +169,13 @@ namespace UnityEngine.XR.iOS
 								PlaceNewObject (newObject, point, resultTypes, true);
 							}
 
-							if (currentSelected == Selected.Picture) {
-								GameObject newObject = Instantiate (Picture, this.transform);
+							if (currentSelected == Selected.Table) {
+								GameObject newObject = Instantiate (Table, this.transform);
+								PlaceNewObject (newObject, point, resultTypes, true);
+							}
+
+							if (currentSelected == Selected.ChairSmall) {
+								GameObject newObject = Instantiate (ChairSmall, this.transform);
 								PlaceNewObject (newObject, point, resultTypes, true);
 							}
 
@@ -183,6 +184,14 @@ namespace UnityEngine.XR.iOS
 								PlaceNewObject (newObject, point, resultTypes, true);
 							}
 						}
+					}
+				}
+				if (objectWasRotated && Input.GetMouseButtonUp (0)) {
+					objectWasRotated = false;
+					if (lastSelectedObject != null) {
+						lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (true);
+						lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().DeactivateRotateImage ();
+						lastSelectedObject.GetComponent<RotateBehavior> ().shouldDetectRotate = false;
 					}
 				}
 			}

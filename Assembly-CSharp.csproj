@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{9791E34E-7989-D3D1-5D13-DD57E6CA9F25}</ProjectGuid>
+    <ProjectGuid>{5748ACF7-D7D4-4474-CA04-7BD8A5EF015B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\FurnitureBehavior.cs" />
      <Compile Include="Assets\Scripts\MenuBehavior.cs" />
+     <Compile Include="Assets\Scripts\RotateBehavior.cs" />
      <Compile Include="Assets\Scripts\XBehavior.cs" />
      <Compile Include="Assets\UnityARKitPlugin\ARKitRemote\ARKitRemoteConnection.cs" />
      <Compile Include="Assets\UnityARKitPlugin\ARKitRemote\ConnectionMessageIds.cs" />

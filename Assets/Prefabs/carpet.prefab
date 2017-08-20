@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 33465139209589420}
   - component: {fileID: 23474835347709444}
   - component: {fileID: 65871240568704740}
+  - component: {fileID: 114990238273330036}
   m_Layer: 0
   m_Name: carpet
   m_TagString: Selectable
@@ -179,7 +180,7 @@ Transform:
   m_GameObject: {fileID: 1585034363061386}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_Children:
   - {fileID: 4337404896111444}
   m_Father: {fileID: 0}
@@ -420,7 +421,7 @@ MonoBehaviour:
   RotateImage: {fileID: 1667560878821560}
   ParentObject: {fileID: 1585034363061386}
   buttonsActive: 0
-  StartScale: {x: 5, y: 5, z: 5}
+  StartScale: {x: 8, y: 8, z: 8}
 --- !u!114 &114722341630116076
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -432,3 +433,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f187ec1d03af941808c896d54e7c1103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114990238273330036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1585034363061386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d27c7168d6c44a5870afd3dcbabb15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldDetectRotate: 0
