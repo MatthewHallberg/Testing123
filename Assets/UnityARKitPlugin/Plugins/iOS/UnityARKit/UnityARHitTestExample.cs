@@ -8,23 +8,32 @@ namespace UnityEngine.XR.iOS
 {
 	public class UnityARHitTestExample : MonoBehaviour
 	{
+		private static UnityARHitTestExample _instance;
+
+		public static UnityARHitTestExample Instance { get { return _instance; } }
+
 		[HideInInspector]
-		public static bool shouldDetectTouch = false;
+		public  bool shouldDetectTouch = false;
+		[HideInInspector]
+		public GameObject lastSelectedObject;
 
 		public Transform m_HitTransform;
 		public GameObject Chair, Couch, Carpet, ChairSmall, Table;
 
-		private GameObject lastSelectedObject;
-
 		public enum Selected {Chair, Couch, ChairSmall, Table, Carpet, CameraButton, Nothing};
 
-		public static Selected currentSelected;
+		public Selected currentSelected;
+
+		private Quaternion previousRotation;
 
 		private bool shouldPlaceObject = true;
 
-		private bool objectWasMoved = false;
 		private bool objectWasRotated = false;
 		private Vector3 mouseStartPosition;
+
+		void Start(){
+			_instance = this;
+		}
 
 		bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes, Transform desiredTransform)
 		{
@@ -42,11 +51,15 @@ namespace UnityEngine.XR.iOS
 
 		void PlaceNewObject(GameObject newObject, ARPoint point, ARHitTestResultType[] resultTypes, bool shouldRotate){
 
+			MenuBehavior.Instance.ResetButtons ();
+
 			newObject.transform.localPosition = Vector3.zero;
 			newObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().Init ();
 
 			if (shouldRotate) {
 				newObject.transform.rotation = Quaternion.Euler (Vector3.zero);
+			} else {
+				newObject.transform.rotation = previousRotation;
 			}
 
 			foreach (ARHitTestResultType resultType in resultTypes)
@@ -64,7 +77,6 @@ namespace UnityEngine.XR.iOS
 			if (Input.GetMouseButtonDown (0)) {
 
 				shouldDetectTouch = true;
-				objectWasMoved = false;
 				mouseStartPosition = Input.mousePosition;
 
 				//get current selected object
@@ -88,7 +100,6 @@ namespace UnityEngine.XR.iOS
 
 			//if dragging
 			if (shouldDetectTouch && Input.GetMouseButton (0) && Input.mousePosition != mouseStartPosition && lastSelectedObject != null) {
-				objectWasMoved = true;
 
 				var screenPosition = Camera.main.ScreenToViewportPoint (Input.mousePosition);
 
@@ -104,7 +115,7 @@ namespace UnityEngine.XR.iOS
 					ARHitTestResultType.ARHitTestResultTypeVerticalPlane, 
 					ARHitTestResultType.ARHitTestResultTypeFeaturePoint
 				}; 
-
+				previousRotation = lastSelectedObject.transform.rotation;
 				PlaceNewObject (lastSelectedObject, point, resultTypes, false);
 			}
 
@@ -125,21 +136,22 @@ namespace UnityEngine.XR.iOS
 
 						if (hit.transform.tag == "Selectable") {
 							shouldPlaceObject = false;
+							lastSelectedObject = hit.transform.gameObject;
 
-							if (hit.transform.GetChild (0).GetComponent<FurnitureBehavior> ().buttonsActive) {
-								hit.transform.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (false);
+							if (lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().buttonsActive) {
+								lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (false);
+								RightMenuBehavior.Instance.CloseMenu ();
 							} else {
-								hit.transform.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (true);
+								lastSelectedObject.transform.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (true);
+								RightMenuBehavior.Instance.OpenMenu ();
 							}
 
-						} else if (hit.transform.tag == "Remove") {
-							shouldPlaceObject = false;
-							Destroy (hit.transform.parent.transform.parent.GetComponent<FurnitureBehavior> ().ParentObject);
-						} else if (hit.transform.tag == "Rotate") {
-							shouldPlaceObject = false;
-							hit.transform.parent.transform.parent.GetComponent<FurnitureBehavior> ().ActivateRotateImage ();
-							lastSelectedObject = hit.transform.parent.transform.parent.GetComponent<FurnitureBehavior> ().ParentObject;
-							lastSelectedObject.GetComponent<RotateBehavior> ().shouldDetectRotate = true;
+							//deselect all other objects
+							foreach (Transform child in lastSelectedObject.transform.parent) {
+								if (child != lastSelectedObject.transform) {
+									child.GetChild (0).GetComponent<FurnitureBehavior> ().ActivateButtons (false);
+								}
+							}
 						}
 					}
 						if (shouldPlaceObject) {

@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\FurnitureBehavior.cs" />
      <Compile Include="Assets\Scripts\MenuBehavior.cs" />
+     <Compile Include="Assets\Scripts\RightMenuBehavior.cs" />
      <Compile Include="Assets\Scripts\RotateBehavior.cs" />
      <Compile Include="Assets\Scripts\XBehavior.cs" />
      <Compile Include="Assets\UnityARKitPlugin\ARKitRemote\ARKitRemoteConnection.cs" />

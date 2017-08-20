@@ -13,6 +13,8 @@ namespace UnityEngine.XR.iOS
 
 		public Transform Chair, Couch, Carpet, ChairSmall, Table, CameraButton, Canvas, FurnitureParent;
 
+		public List <Transform> leftButtons = new List<Transform>();
+
 		public Color selectedColor, normalColor;
 	
 		private Vector3 scaleUp = new Vector3 (.2f, .2f, 0);
@@ -27,12 +29,13 @@ namespace UnityEngine.XR.iOS
 
 			ResetButtons ();
 			ButtonPressed (Chair);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Chair;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Chair;
 		}
 
-		private void ResetButtons(){
+		public void ResetButtons(){
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Nothing;
 			//reset all other buttons
-			foreach (Transform child in this.transform) {
+			foreach (Transform child in leftButtons) {
 				if (child.localScale.x > 1.01f) {
 					child.GetComponent<Image> ().color = normalColor;
 					child.localScale -= scaleUp;
@@ -41,9 +44,10 @@ namespace UnityEngine.XR.iOS
 		}
 
 		public void CameraButtonDown(){
-			UnityARHitTestExample.shouldDetectTouch = false;
+			RightMenuBehavior.Instance.CloseMenu ();
+			UnityARHitTestExample.Instance.shouldDetectTouch = false;
 			ResetButtons ();
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.CameraButton;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.CameraButton;
 			foreach (Transform child in Canvas.transform) {
 				child.gameObject.SetActive (false);
 			}
@@ -63,10 +67,11 @@ namespace UnityEngine.XR.iOS
 		public void CameraButtonUp(){
 
 			ResetButtons ();
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Nothing;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Nothing;
 			foreach (Transform child in Canvas.transform) {
 				child.gameObject.SetActive (true);
 			}
+			RightMenuBehavior.Instance.CloseMenu ();
 			foreach (GameObject go in Hideable){
 				go.SetActive (true);
 			}
@@ -78,7 +83,7 @@ namespace UnityEngine.XR.iOS
 
 			ResetButtons ();
 			ButtonPressed (Chair);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Chair;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Chair;
 
 		}
 
@@ -86,33 +91,33 @@ namespace UnityEngine.XR.iOS
 
 			ResetButtons ();
 			ButtonPressed (Couch);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Couch;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Couch;
 		}
 
 		public void ChairSmallButtonDown(){
 
 			ResetButtons ();
 			ButtonPressed (ChairSmall);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.ChairSmall;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.ChairSmall;
 		}
 
 		public void TableButtonDown(){
 
 			ResetButtons ();
 			ButtonPressed (Table);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Table;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Table;
 		}
 
 		public void CarpetButtonDown(){
 
 			ResetButtons ();
 			ButtonPressed (Carpet);
-			UnityARHitTestExample.currentSelected = UnityARHitTestExample.Selected.Carpet;
+			UnityARHitTestExample.Instance.currentSelected = UnityARHitTestExample.Selected.Carpet;
 		}
 
 		void ButtonPressed(Transform desiredTransform){
 			//scale buttons to show when they are selected
-			UnityARHitTestExample.shouldDetectTouch = false;
+			UnityARHitTestExample.Instance.shouldDetectTouch = false;
 			desiredTransform.GetComponent<Image> ().color = selectedColor;
 			desiredTransform.localScale += scaleUp;
 			desiredTransform.SetAsLastSibling ();

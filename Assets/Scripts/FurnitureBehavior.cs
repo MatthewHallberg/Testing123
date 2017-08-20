@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class FurnitureBehavior : MonoBehaviour {
 
-	public GameObject RemoveButton,RotateButton,RotateImage, ParentObject;
+	public GameObject SelectedImage,RotateImage, ParentObject;
+
+	public List<GameObject> objectsToColor = new List<GameObject>();
+
+	public List<Color> colorList = new List<Color>();
 
 	[HideInInspector]
 	public bool buttonsActive = false;
@@ -28,21 +32,26 @@ public class FurnitureBehavior : MonoBehaviour {
 
 	public void ActivateButtons(bool active){
 		buttonsActive = active;
-		RemoveButton.SetActive (active);
-		RotateButton.SetActive (active);
+		SelectedImage.SetActive (active);
+		if (!active) {
+			DeactivateRotateImage ();
+			transform.parent.GetComponent<RotateBehavior> ().shouldDetectRotate = false;
+		}
 	}
 
 	public void ActivateRotateImage(){
 
-		RotateImage.SetActive (true);
 		ActivateButtons (false);
+		RotateImage.SetActive (true);
 		rotateRoutine = StartCoroutine (RotateRoutine ());
 	}
 
 	public void DeactivateRotateImage(){
 		
 		RotateImage.SetActive (false);
-		StopCoroutine (rotateRoutine);
+		if (rotateRoutine != null) {
+			StopCoroutine (rotateRoutine);
+		}
 	}
 
 	Coroutine rotateRoutine;
